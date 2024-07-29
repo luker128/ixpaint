@@ -34,6 +34,7 @@ bool processInput() {
       case SDL_MOUSEMOTION: {
         mouse_x = event.motion.x;
         mouse_y = event.motion.y;
+        mouse_move(event.motion.xrel, event.motion.yrel);
         break;
       }
       case SDL_MOUSEWHEEL: {
@@ -87,7 +88,6 @@ void init_controller() {
   // Variables for controllers and joysticks
 
   // Enumerate joysticks
-  std::cout << "Enumerating " << SDL_NumJoysticks() << " joysticks" << std::endl;
   for (int i = 0; i < SDL_NumJoysticks(); ++i) {
 
     // Check to see if joystick supports SDL's game controller interface

@@ -36,7 +36,7 @@ static GLuint createProgram(const std::string &vertexShaderSource, const std::st
   if (isLinked == GL_FALSE) {
     char buf[1024];
     glGetProgramInfoLog(program, sizeof(buf), NULL, buf);
-    std::cout << "Shader linking failed" << std::endl << buf << std::endl;
+    std::cout << "prim Shader linking failed" << std::endl << buf << std::endl;
   }
   return program;
 }
@@ -107,6 +107,11 @@ void PrimitiveShader::setScroll(int x, int y) {
   scrollY = y;
 }
 
+void PrimitiveShader::addScroll(int x, int y) {
+  scrollX += x;
+  scrollY += y;
+}
+
 void PrimitiveShader::setScale(float s) {
   scale = s;
 }
@@ -171,6 +176,26 @@ void PrimitiveShader::drawCircle(float x0, float y0, float r) {
   glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_DYNAMIC_DRAW);
   executeDraw(GL_TRIANGLE_FAN, detail+1);
+}
+
+void PrimitiveShader::drawTexture(float x0, float y0, float w, float h, float targetW, float targetH) {
+    GLfloat x1 = x0 + w;
+    GLfloat y1 = y0 + h;
+    GLfloat positions[12] = {x0,y0, x1,y0, x0,y1,  x1,y0, x0,y1, x1,y1};
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_DYNAMIC_DRAW);
+
+    glUseProgram(program);
+    glBindVertexArray(vao);
+    glUniform2f(u_scroll, scrollX, scrollY);
+    glUniform2f(u_screensize, screen_w*scale, screen_h*scale);
+    glUniform4f(u_color, red, green, blue, alpha);
+    glUniform1i(u_useTexture, 1);
+
+    glUniform1f(u_textureScale, 128 / ((w/targetW)*targetW));
+    glUniform2f(u_texturePos, -x0, -y0);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void PrimitiveShader::executeDraw(int primitive, int numVertex, bool useTexture) {

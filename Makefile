@@ -1,11 +1,11 @@
-PROJECT = GameBase
+PROJECT = indexpaint
 CXX = g++
 EMCC = emcc
 SRC = $(wildcard *.cpp) $(wildcard sys/*.cpp) $(wildcard gfx/*.cpp)
 OBJ = $(SRC:%.cpp=%.o)
 DEPFILES = $(SRC:%.cpp=%.d)
 INC = *.h
-CXXFLAGS= -g -O2 -std=c++17 -Isys -DPROJECT_NAME="\"${PROJECT}\"" #-Wall -Wextra
+CXXFLAGS= -g -O2 -std=c++17 -Isys -Iglm -DPROJECT_NAME="\"${PROJECT}\"" #-Wall -Wextra
 WEB_TARGET = html/game.js
 WEB_LDFLAGS = -s USE_WEBGL2=1 -s ALLOW_MEMORY_GROWTH=1 --preload-file data --no-heap-copy #-lopenal
 NATIVE_LDFLAGS = -lSDL2 -lGL -lGLU #-lopenal

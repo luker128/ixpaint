@@ -5,6 +5,7 @@ struct Point {
   double x;
   double y;
   Point(double x, double y) : x(x), y(y) {}
+  Point(int x, int y) : x((double)x), y((double)y) {}
 };
 
 double dot(const Point& a, const Point& b);
